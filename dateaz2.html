@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mənimlə görüşə gedərsən? 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff4d6d;
+      --primary-light: #ff758f;
+      --primary-dark: #c9184a;
+      --secondary: #ffb3c1;
+      --telegram-blue: #24A1DE;
+      --telegram-dark: #1b8ec5;
+      --bg-gradient: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #ffb3c6 100%);
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --text-main: #590d22;
+      --text-muted: #800f2f;
+      --shadow: 0 20px 45px rgba(255, 77, 109, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .hearts-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: -10vh;
+      color: rgba(255, 77, 109, 0.38);
+      font-size: 24px;
+      animation: floatUp 8s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-110vh) scale(1.4) rotate(360deg); opacity: 0; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      margin: auto;
+    }
+
+    .card {
+      background: #ffffff;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid #ffffff;
+      border-radius: 28px;
+      padding: 28px 22px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      position: relative;
+      z-index: 20;
+    }
+
+    .step {
+      display: none;
+      opacity: 1;
+    }
+
+    .step.active {
+      display: block !important;
+      animation: stepFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes stepFadeIn {
+      0% { opacity: 0; transform: translateY(12px) scale(0.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--primary-dark);
+      font-size: 1.95rem;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-family: 'Fredoka', sans-serif;
+      color: var(--text-main);
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .gif-container {
+      width: 145px;
+      height: 145px;
+      margin: 0 auto 16px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3.5px solid var(--secondary);
+      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.15);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gif-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-top: 16px;
+      position: relative;
+      min-height: 65px;
+    }
+
+    .btn {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 13px 26px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff4d6d 0%, #ff758f 100%);
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
+      z-index: 20;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-yes:hover {
+      background: linear-gradient(135deg, #ff2a55 0%, #ff5d7a 100%);
+      box-shadow: 0 12px 30px rgba(255, 77, 109, 0.55);
+    }
+
+    .btn-no {
+      background: #f8d7da;
+      color: #721c24;
+      border: 2px solid #f5c6cb;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 15;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #ff4d6d 0%, #ff758f 100%);
+      color: white;
+      width: 100%;
+      margin-top: 16px;
+      box-shadow: 0 10px 25px rgba(255, 77, 109, 0.35);
+    }
+
+    .btn-next:hover {
+      box-shadow: 0 14px 30px rgba(255, 77, 109, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-telegram-smart {
+      background: linear-gradient(135deg, #24A1DE 0%, #0088cc 100%);
+      color: white;
+      width: 100%;
+      margin-top: 16px;
+      padding: 15px 22px;
+      box-shadow: 0 12px 28px rgba(36, 161, 222, 0.4);
+      font-size: 1.15rem;
+    }
+
+    .btn-telegram-smart:hover {
+      background: linear-gradient(135deg, #1b8ec5 0%, #0077b3 100%);
+      box-shadow: 0 16px 34px rgba(36, 161, 222, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-telegram-smart svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #ffd1dc;
+      border-radius: 16px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.18);
+    }
+
+    .selection-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+      max-height: 290px;
+      overflow-y: auto;
+      padding: 2px;
+    }
+
+    .selection-grid::-webkit-scrollbar { width: 5px; }
+    .selection-grid::-webkit-scrollbar-thumb { background: #ffb3c1; border-radius: 10px; }
+
+    .select-card {
+      background: #fff;
+      border: 2.5px solid #ffe5ec;
+      border-radius: 18px;
+      padding: 12px 6px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .select-card:hover {
+      border-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(255, 77, 109, 0.12);
+    }
+
+    .select-card.selected {
+      border-color: var(--primary);
+      background: #fff0f3;
+      box-shadow: 0 6px 16px rgba(255, 77, 109, 0.22);
+      transform: scale(1.02);
+    }
+
+    .select-card .icon { font-size: 1.9rem; }
+    .select-card .label { font-size: 0.85rem; font-weight: 700; color: var(--text-main); text-align: center; }
+
+    .confirmation-box {
+      background: #fff0f3;
+      border: 2px dashed var(--primary);
+      border-radius: 20px;
+      padding: 16px 16px;
+      margin: 14px 0 6px 0;
+      text-align: left;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.98rem;
+      color: var(--text-main);
+    }
+
+    .detail-row:last-child { margin-bottom: 0; }
+    .detail-row .icon { font-size: 1.3rem; width: 26px; text-align: center; }
+    .detail-row strong { color: var(--primary-dark); font-weight: 700; }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(89, 13, 34, 0.95);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s;
+      opacity: 0;
+      z-index: 300;
+      pointer-events: none;
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #confettiCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 50; }
+
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ffd1dc;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      transform: scale(1.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts-bg" id="heartsBg"></div>
+  <canvas id="confettiCanvas"></canvas>
+  <div id="toast" class="toast">✨ Telegram açılır...</div>
+
+  <div class="container">
+    <div class="card">
+      <div class="progress-bar" id="progressBar">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <!-- 1-ci Addım -->
+      <div class="step active" id="step1">
+        <div class="gif-container">
+          <img id="step1Gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3hrcnV4ZDVzcjZ0aWZkNWJicG0zMHc2NXpkeGV4ejRna214Z2lycyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L4lvBzeGQwpvy8eUCbcc/giphy.gif" alt="Cute asking cat" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&auto=format&fit=crop&q=80'" />
+        </div>
+        <h1>Mənimlə görüşə gedərsən?</h1>
+        <p>Hər günümü gözəlləşdirirsən! "Hə" deyirsən? 🥺👉👈</p>
+        
+        <div class="btn-group" id="btnGroup">
+          <button class="btn btn-yes" id="btnYes">HƏ! 🥰</button>
+          <button class="btn btn-no" id="btnNo">Yox 😢</button>
+        </div>
+      </div>
+
+      <!-- 2-ci Addım -->
+      <div class="step" id="step2">
+        <div class="gif-container">
+          <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGNid25jcTF4ZzNzMTY3bDRuZnF5Z2N1bzQ3aXl1bzJ5b2NveW00ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/T86i6yDyOYz7J6dPhf/giphy.gif" alt="Happy bear jumping" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300&auto=format&fit=crop&q=80'" />
+        </div>
+        <h2>Uraaa! Nə vaxt uyğunsan? 📅⏰</h2>
+        <p>Görüşümüz üçün ən uyğun gün və saatı seç!</p>
+
+        <div class="form-group">
+          <label for="dateInput">Tarixi seç:</label>
+          <input type="date" id="dateInput" class="input-field" />
+        </div>
+
+        <div class="form-group">
+          <label for="timeInput">Saat seç:</label>
+          <input type="time" id="timeInput" class="input-field" value="19:00" />
+        </div>
+
+        <button class="btn btn-next" id="toStep3">Növbəti: Məkanı seçək! 📍</button>
+      </div>
+
+      <!-- 3-cü Addım -->
+      <div class="step" id="step3">
+        <h2>Hara gedək? 📍✨</h2>
+        <p>Hansı ab-hava sənə daha xoş olar?</p>
+
+        <div class="selection-grid" id="locationGrid">
+          <div class="select-card selected" data-value="Romantik Rahat Restoran">
+            <span class="icon">🍷</span>
+            <span class="label">Romantik Restoran</span>
+          </div>
+          <div class="select-card" data-value="Şirin Kafe & Qəhvə">
+            <span class="icon">☕</span>
+            <span class="label">Şirin Kafe</span>
+          </div>
+          <div class="select-card" data-value="Dənizkənarı / Park Gəzintisi">
+            <span class="icon">🌅</span>
+            <span class="label">Dənizkənarı Gəzinti</span>
+          </div>
+          <div class="select-card" data-value="Kinoteatr & Popkorn Gecəsi">
+            <span class="icon">🎬</span>
+            <span class="label">Kino Gecəsi</span>
+          </div>
+          <div class="select-card" data-value="Təbiət Qoynunda Piknik">
+            <span class="icon">🧺</span>
+            <span class="label">Açıq Havada Piknik</span>
+          </div>
+          <div class="select-card" data-value="Əyləncə Mərkəzi & Oyunlar">
+            <span class="icon">🎡</span>
+            <span class="label">Əyləncə Mərkəzi</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="text" id="customLocation" class="input-field" placeholder="Və ya istədiyin başqa məkanı yaz..." />
+        </div>
+
+        <button class="btn btn-next" id="toStep4">Növbəti: Nə yeyək? 🍕</button>
+      </div>
+
+      <!-- 4-cü Addım -->
+      <div class="step" id="step4">
+        <h2>Nə yemək istəyirsən? 😋🍴</h2>
+        <p>Ürəyin nə istəyir seç:</p>
+
+        <div class="selection-grid" id="foodGrid">
+          <div class="select-card selected" data-value="Dadlı Suşi & Asiya Mətbəxi">
+            <span class="icon">🍣</span>
+            <span class="label">Suşi</span>
+          </div>
+          <div class="select-card" data-value="Pizza & İtalyan Pastası">
+            <span class="icon">🍕</span>
+            <span class="label">Pizza & Pasta</span>
+          </div>
+          <div class="select-card" data-value="Ləzzətli Burger & Fri">
+            <span class="icon">🍔</span>
+            <span class="label">Burger & Fri</span>
+          </div>
+          <div class="select-card" data-value="Kabab, Steyk & Ət Yeməkləri">
+            <span class="icon">🥩</span>
+            <span class="label">Kabab & Steyk</span>
+          </div>
+          <div class="select-card" data-value="Tako & Meksika Mətbəxi">
+            <span class="icon">🌮</span>
+            <span class="label">Tako & Meksika</span>
+          </div>
+          <div class="select-card" data-value="Şirniyyatlar, Vafli & Dondurma">
+            <span class="icon">🍰</span>
+            <span class="label">Şirniyyat & Dondurma</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="text" id="customFood" class="input-field" placeholder="Və ya ürəyindən keçən başqa yeməyi yaz..." />
+        </div>
+
+        <button class="btn btn-next" id="toStep5">Görüşümüzü Təsdiqlə! 💖</button>
+      </div>
+
+      <!-- 5-ci Addım (Yığcam) -->
+      <div class="step" id="step5">
+        <div class="gif-container">
+          <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZydndscWF4N2N3NDIxaGJ1bzVscTR4aTdrdXRhMmxwOHhsaW1pbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/artj92V8o75VPL7AeQ/giphy.gif" alt="Cute celebratory hug" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&auto=format&fit=crop&q=80'" />
+        </div>
+        <h1>RAZILAŞDIQ! 🎉❤️</h1>
+        <p>Görüş detallarımız:</p>
+
+        <div class="confirmation-box">
+          <div class="detail-row">
+            <span class="icon">📅</span>
+            <span><strong id="resDate">Sabah</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="icon">⏰</span>
+            <span><strong id="resTime">19:00</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="icon">📍</span>
+            <span><strong id="resLoc">Romantik Rahat Restoran</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="icon">🍴</span>
+            <span><strong id="resFood">Dadlı Suşi & Asiya Mətbəxi</strong></span>
+          </div>
+        </div>
+
+        <button class="btn btn-telegram-smart" id="btnSmartSendTelegram">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.939z"/>
+          </svg>
+          <span id="btnText">Telegrama göndər 💌</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const TELEGRAM_USERNAME = "hajimammada";
+
+    let currentStep = 1;
+    let selectedDate = '';
+    let selectedTime = '';
+    let selectedLocation = 'Romantik Rahat Restoran';
+    let selectedFood = 'Dadlı Suşi & Asiya Mətbəxi';
+
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
+    const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
+    const customLocation = document.getElementById('customLocation');
+    const customFood = document.getElementById('customFood');
+    const toast = document.getElementById('toast');
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    if (dateInput) {
+      dateInput.min = new Date().toISOString().split('T')[0];
+      dateInput.value = tomorrowStr;
+    }
+
+    function showToast(msg) {
+      if (!toast) return;
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    function getFormattedMessage() {
+      const d = document.getElementById('resDate')?.innerText || '';
+      const t = document.getElementById('resTime')?.innerText || '';
+      const l = document.getElementById('resLoc')?.innerText || '';
+      const f = document.getElementById('resFood')?.innerText || '';
+
+      return `Salam! Görüş təklifinə "HƏ" dedim! 🥰💖\n\n📅 ${d}\n⏰ ${t}\n📍 ${l}\n🍴 ${f}\n\nGörüşümüzü səbirsizliklə gözləyirəm! ✨`;
+    }
+
+    let noClickCount = 0;
+    const noResponses = [
+      "Yox 😢",
+      "Dəqiq əminsən? 🥺",
+      "Bir də fikirləş! 💭",
+      "Qəlbimi qırma 💔",
+      "Səhv düymədir! 👉",
+      "Xahiş edirəm? 🥰",
+      "Sənə şirniyyat alaram! 🍫",
+      "Başqa şansın yoxdur! 😜",
+      "Məcbur 'Hə' deməlisən! 💖"
+    ];
+
+    function dodgeNoButton() {
+      noClickCount++;
+      const nextText = noResponses[noClickCount % noResponses.length];
+      if (btnNo) btnNo.innerText = nextText;
+
+      const currentScale = Math.min(1 + (noClickCount * 0.2), 2.2);
+      if (btnYes) btnYes.style.transform = `scale(${currentScale})`;
+
+      const card = document.querySelector('.card');
+      if (card && btnNo) {
+        const cardRect = card.getBoundingClientRect();
+        const maxX = cardRect.width / 2 - 60;
+        const maxY = 100;
+
+        const randomX = (Math.random() - 0.5) * maxX * 1.5;
+        const randomY = (Math.random() - 0.5) * maxY;
+
+        btnNo.style.position = 'relative';
+        btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+      }
+    }
+
+    if (btnNo) {
+      btnNo.addEventListener('mouseover', dodgeNoButton);
+      btnNo.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        dodgeNoButton();
+      });
+      btnNo.addEventListener('click', (e) => {
+        e.preventDefault();
+        dodgeNoButton();
+      });
+    }
+
+    function goToStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      const nextStepEl = document.getElementById(`step${stepNumber}`);
+      if (nextStepEl) {
+        nextStepEl.classList.add('active');
+        currentStep = stepNumber;
+        updateProgressBar(stepNumber);
+      }
+    }
+
+    function updateProgressBar(step) {
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        if (index < step) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    if (btnYes) {
+      btnYes.addEventListener('click', () => {
+        triggerConfetti();
+        goToStep(2);
+      });
+    }
+
+    const toStep3 = document.getElementById('toStep3');
+    if (toStep3) {
+      toStep3.addEventListener('click', () => {
+        if (!dateInput || !dateInput.value) {
+          alert('Zəhmət olmasa əvvəlcə tarixi seçin! 📅');
+          return;
+        }
+        selectedDate = dateInput.value;
+        selectedTime = (timeInput && timeInput.value) ? timeInput.value : '19:00';
+        goToStep(3);
+      });
+    }
+
+    const locationCards = document.querySelectorAll('#locationGrid .select-card');
+    locationCards.forEach(card => {
+      card.addEventListener('click', () => {
+        locationCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedLocation = card.getAttribute('data-value');
+        if (customLocation) customLocation.value = '';
+      });
+    });
+
+    if (customLocation) {
+      customLocation.addEventListener('input', () => {
+        if (customLocation.value.trim() !== '') {
+          locationCards.forEach(c => c.classList.remove('selected'));
+          selectedLocation = customLocation.value.trim();
+        }
+      });
+    }
+
+    const toStep4 = document.getElementById('toStep4');
+    if (toStep4) {
+      toStep4.addEventListener('click', () => {
+        if (customLocation && customLocation.value.trim() !== '') {
+          selectedLocation = customLocation.value.trim();
+        }
+        goToStep(4);
+      });
+    }
+
+    const foodCards = document.querySelectorAll('#foodGrid .select-card');
+    foodCards.forEach(card => {
+      card.addEventListener('click', () => {
+        foodCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedFood = card.getAttribute('data-value');
+        if (customFood) customFood.value = '';
+      });
+    });
+
+    if (customFood) {
+      customFood.addEventListener('input', () => {
+        if (customFood.value.trim() !== '') {
+          foodCards.forEach(c => c.classList.remove('selected'));
+          selectedFood = customFood.value.trim();
+        }
+      });
+    }
+
+    const toStep5 = document.getElementById('toStep5');
+    if (toStep5) {
+      toStep5.addEventListener('click', () => {
+        if (customFood && customFood.value.trim() !== '') {
+          selectedFood = customFood.value.trim();
+        }
+
+        let formattedDate = selectedDate;
+        try {
+          const d = new Date(selectedDate + 'T00:00:00');
+          const monthsAz = [
+            'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'İyun',
+            'İyul', 'Avqust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'
+          ];
+          const daysAz = [
+            'Bazar', 'Bazar ertəsi', 'Çərşənbə axşamı', 'Çərşənbə',
+            'Cümə axşamı', 'Cümə', 'Şənbə'
+          ];
+          const dayName = daysAz[d.getDay()];
+          const monthName = monthsAz[d.getMonth()];
+          formattedDate = `${d.getDate()} ${monthName} ${d.getFullYear()} (${dayName})`;
+        } catch (e) {}
+
+        let formattedTime = selectedTime || '19:00';
+
+        const resDate = document.getElementById('resDate');
+        const resTime = document.getElementById('resTime');
+        const resLoc = document.getElementById('resLoc');
+        const resFood = document.getElementById('resFood');
+
+        if (resDate) resDate.innerText = formattedDate;
+        if (resTime) resTime.innerText = formattedTime;
+        if (resLoc) resLoc.innerText = selectedLocation;
+        if (resFood) resFood.innerText = selectedFood;
+
+        goToStep(5);
+        triggerCelebration();
+      });
+    }
+
+    const btnSmartSendTelegram = document.getElementById('btnSmartSendTelegram');
+    const btnText = document.getElementById('btnText');
+
+    if (btnSmartSendTelegram) {
+      btnSmartSendTelegram.addEventListener('click', () => {
+        const msg = getFormattedMessage();
+        const encodedMsg = encodeURIComponent(msg);
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(msg);
+        }
+
+        showToast("💖 Telegram açılır...");
+        if (btnText) btnText.innerText = "Telegram-a qoşulur...";
+
+        const tgAppUri = `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMsg}`;
+        const tgResolveUri = `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMsg}`;
+        const tgWebUri = `https://web.telegram.org/k/#?tgaddr=${encodeURIComponent(tgResolveUri)}`;
+
+        let appOpened = false;
+
+        const onWindowBlur = () => {
+          appOpened = true;
+          if (btnText) btnText.innerText = "Telegram tətbiqi ilə göndərildi! 🎉";
+          window.removeEventListener('blur', onWindowBlur);
+          document.removeEventListener('visibilitychange', onVisibilityChange);
+        };
+
+        const onVisibilityChange = () => {
+          if (document.hidden) {
+            appOpened = true;
+            if (btnText) btnText.innerText = "Telegram tətbiqi ilə göndərildi! 🎉";
+            window.removeEventListener('blur', onWindowBlur);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+          }
+        };
+
+        window.addEventListener('blur', onWindowBlur);
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
+        const hiddenFrame = document.createElement('iframe');
+        hiddenFrame.style.display = 'none';
+        hiddenFrame.src = tgAppUri;
+        document.body.appendChild(hiddenFrame);
+
+        setTimeout(() => {
+          window.removeEventListener('blur', onWindowBlur);
+          document.removeEventListener('visibilitychange', onVisibilityChange);
+          try { document.body.removeChild(hiddenFrame); } catch(e) {}
+
+          if (!appOpened && !document.hidden) {
+            showToast("🌐 Telegram Web-ə yönləndirilir...");
+            if (btnText) btnText.innerText = "Telegram Web açılır...";
+            window.location.href = tgWebUri;
+          }
+        }, 1200);
+      });
+    }
+
+    const heartsBg = document.getElementById('heartsBg');
+    if (heartsBg) {
+      const heartSymbols = ['💖', '💕', '🌸', '✨', '💗', '🍓', '🎀'];
+      for (let i = 0; i < 22; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.animationDuration = `${6 + Math.random() * 6}s`;
+        heart.style.animationDelay = `${Math.random() * 5}s`;
+        heart.style.fontSize = `${16 + Math.random() * 24}px`;
+        heartsBg.appendChild(heart);
+      }
+    }
+
+    const canvas = document.getElementById('confettiCanvas');
+    let ctx = null;
+    if (canvas) {
+      ctx = canvas.getContext('2d');
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+    }
+    let particles = [];
+
+    function createParticle() {
+      if (!canvas) return {};
+      const colors = ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffd166', '#06d6a0', '#118ab2', '#ffc2d1'];
+      return {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 16,
+        vy: (Math.random() - 0.5) * 16 - 4,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 10,
+        gravity: 0.35,
+        opacity: 1,
+        life: 1
+      };
+    }
+
+    function triggerConfetti() {
+      if (!canvas || !ctx) return;
+      for (let i = 0; i < 70; i++) {
+        particles.push(createParticle());
+      }
+      if (!isAnimatingConfetti) {
+        animateConfetti();
+      }
+    }
+
+    function triggerCelebration() {
+      if (!canvas || !ctx) return;
+      for (let burst = 0; burst < 3; burst++) {
+        setTimeout(() => {
+          for (let i = 0; i < 90; i++) {
+            particles.push(createParticle());
+          }
+          if (!isAnimatingConfetti) {
+            animateConfetti();
+          }
+        }, burst * 350);
+      }
+    }
+
+    let isAnimatingConfetti = false;
+    function animateConfetti() {
+      if (!canvas || !ctx) return;
+      isAnimatingConfetti = true;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.rotation += p.rotationSpeed;
+        p.life -= 0.012;
+        p.opacity = Math.max(0, p.life);
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      });
+
+      particles = particles.filter(p => p.life > 0);
+
+      if (particles.length > 0) {
+        requestAnimationFrame(animateConfetti);
+      } else {
+        isAnimatingConfetti = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+  </script>
+</body>
+</html>
