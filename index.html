@@ -76,7 +76,6 @@
     }
 
     .card {
-      background: #ffffff;
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -333,19 +332,20 @@
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: rgba(89, 13, 34, 0.95);
+      background: rgba(89, 13, 34, 0.96);
       color: #fff;
-      padding: 11px 22px;
+      padding: 12px 24px;
       border-radius: 50px;
       font-size: 0.9rem;
       font-weight: 600;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s;
       opacity: 0;
       z-index: 300;
       pointer-events: none;
       text-align: center;
       max-width: 90vw;
+      line-height: 1.4;
     }
 
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -392,7 +392,7 @@
         <div class="gif-container">
           <img id="step1Gif" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmJsd3VqODV3MTEwd2hxejY4Y3FlMzdlZ2UyeXUwN2NoY2RwbXR0diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKNIRXQb78YWoXC/giphy.gif" alt="Cute asking cat" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&auto=format&fit=crop&q=80'" />
         </div>
-        <h1>Mənimlə görüşə gedərsən?</h1>
+        <h1>Mənimlə görüşə gələrsən?</h1>
         <p>Hər günümü gözəlləşdirirsən! "Hə" deyirsən? 🥺👉👈</p>
         
         <div class="btn-group" id="btnGroup">
@@ -500,7 +500,7 @@
         <button class="btn btn-next" id="toStep5">Görüşümüzü Təsdiqlə! 💖</button>
       </div>
 
-      <!-- 5-ci Addım (Yığcam) -->
+      <!-- 5-ci Addım -->
       <div class="step" id="step5">
         <div class="gif-container">
           <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZydndscWF4N2N3NDIxaGJ1bzVscTR4aTdrdXRhMmxwOHhsaW1pbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/artj92V8o75VPL7AeQ/giphy.gif" alt="Cute celebratory hug" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&auto=format&fit=crop&q=80'" />
@@ -539,7 +539,12 @@
   </div>
 
   <script>
+    // --- TƏNZİMLƏMƏLƏR ---
     const TELEGRAM_USERNAME = "hajimammada";
+
+    // (İstəyə bağlı) Əgər birbaşa botla avtomatik göndərmək istəsəniz, bura token və chat ID qeyd edin:
+    const TELEGRAM_BOT_TOKEN = "8861798488:AAGmuZwwnBNf3Ec2YkEMN3LhidR92oAqKgo"; // Məs: "123456789:ABCdefGHI..."
+    const TELEGRAM_CHAT_ID = "7587782679";   // Məs: "123456789"
 
     let currentStep = 1;
     let selectedDate = '';
@@ -563,13 +568,13 @@
       dateInput.value = tomorrowStr;
     }
 
-    function showToast(msg) {
+    function showToast(msg, duration = 4000) {
       if (!toast) return;
       toast.innerText = msg;
       toast.classList.add('show');
       setTimeout(() => {
         toast.classList.remove('show');
-      }, 3500);
+      }, duration);
     }
 
     function getFormattedMessage() {
@@ -578,7 +583,7 @@
       const l = document.getElementById('resLoc')?.innerText || '';
       const f = document.getElementById('resFood')?.innerText || '';
 
-      return `Salam! Görüş təklifinə "HƏ" dedim! 🥰💖\n\n📅 ${d}\n⏰ ${t}\n📍 ${l}\n🍴 ${f}\n\nGörüşümüzü səbirsizliklə gözləyirəm! ✨`;
+      return `Salam! Görüş təklifinə "HƏ" dedim! 🥰💖\n\n📅 Tarix: ${d}\n⏰ Saat: ${t}\n📍 Məkan: ${l}\n🍴 Yemək: ${f}\n\nGörüşümüzü səbirsizliklə gözləyirəm! ✨`;
     }
 
     let noClickCount = 0;
@@ -761,58 +766,58 @@
     const btnText = document.getElementById('btnText');
 
     if (btnSmartSendTelegram) {
-      btnSmartSendTelegram.addEventListener('click', () => {
+      btnSmartSendTelegram.addEventListener('click', async () => {
         const msg = getFormattedMessage();
         const encodedMsg = encodeURIComponent(msg);
 
+        // 1. Mətni mütləq clipboard-a kopyalayırıq
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(msg);
+          try {
+            await navigator.clipboard.writeText(msg);
+          } catch (e) {}
         }
 
-        showToast("💖 Telegram açılır...");
-        if (btnText) btnText.innerText = "Telegram-a qoşulur...";
+        // Seçim A: Əgər Bot Token qeyd edilibsə (Ən rahat və birbaşa üsul)
+        if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+          if (btnText) btnText.innerText = "Göndərilir... 💌";
+          try {
+            const botUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const resp = await fetch(botUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: msg
+              })
+            });
 
+            if (resp.ok) {
+              showToast("💖 Təklif uğurla göndərildi! 🎉");
+              if (btnText) btnText.innerText = "Təsdiqləndi! Görüşənədək 🥰";
+              btnSmartSendTelegram.style.background = "linear-gradient(135deg, #16a34a 0%, #15803d 100%)";
+              triggerCelebration();
+              return;
+            }
+          } catch (err) {
+            console.error("Bot göndərmə xətası:", err);
+          }
+        }
+
+        // Seçim B: Deep Link + Kopyalama bildirişi (Bot olmadıqda)
+        showToast("📋 Mesaj kopyalandı! Çatda görünməsə 'Yapışdır' (Paste) edin ✨", 5000);
+        if (btnText) btnText.innerText = "Telegram açılır...";
+
+        // Universal link və tg sxemi
         const tgAppUri = `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMsg}`;
-        const tgResolveUri = `tg://resolve?domain=${TELEGRAM_USERNAME}&text=${encodedMsg}`;
-        const tgWebUri = `https://web.telegram.org/k/#?tgaddr=${encodeURIComponent(tgResolveUri)}`;
+        const tMeUri = `https://t.me/${TELEGRAM_USERNAME}?text=${encodedMsg}`;
 
-        let appOpened = false;
-
-        const onWindowBlur = () => {
-          appOpened = true;
-          if (btnText) btnText.innerText = "Telegram tətbiqi ilə göndərildi! 🎉";
-          window.removeEventListener('blur', onWindowBlur);
-          document.removeEventListener('visibilitychange', onVisibilityChange);
-        };
-
-        const onVisibilityChange = () => {
-          if (document.hidden) {
-            appOpened = true;
-            if (btnText) btnText.innerText = "Telegram tətbiqi ilə göndərildi! 🎉";
-            window.removeEventListener('blur', onWindowBlur);
-            document.removeEventListener('visibilitychange', onVisibilityChange);
-          }
-        };
-
-        window.addEventListener('blur', onWindowBlur);
-        document.addEventListener('visibilitychange', onVisibilityChange);
-
-        const hiddenFrame = document.createElement('iframe');
-        hiddenFrame.style.display = 'none';
-        hiddenFrame.src = tgAppUri;
-        document.body.appendChild(hiddenFrame);
-
+        // WebView daxilində yönləndirmə
         setTimeout(() => {
-          window.removeEventListener('blur', onWindowBlur);
-          document.removeEventListener('visibilitychange', onVisibilityChange);
-          try { document.body.removeChild(hiddenFrame); } catch(e) {}
-
-          if (!appOpened && !document.hidden) {
-            showToast("🌐 Telegram Web-ə yönləndirilir...");
-            if (btnText) btnText.innerText = "Telegram Web açılır...";
-            window.location.href = tgWebUri;
-          }
-        }, 1200);
+          window.location.href = tgAppUri;
+          setTimeout(() => {
+            window.location.href = tMeUri;
+          }, 600);
+        }, 300);
       });
     }
 
